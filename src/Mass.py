@@ -1,0 +1,58 @@
+import pygame
+
+
+class Mass:
+    # Single instance of a Tile
+
+    def __init__(self, screen):
+        # Initializes a single Tile
+
+        # Initialize Basic Visual Variables
+        self.screen = screen
+
+        # Setting up Piece
+        self.pieces = []
+
+        # Others
+        self.border_thickness = 1
+
+    def draw(self):
+        # Draws the Tile at its position, and a border around it (for grid spacing)
+
+        # Draw Tile (then border) to screen
+        for piece in self.pieces:
+            piece_color = piece[0]
+            piece_rectangle = piece[1]
+            pygame.draw.rect(self.screen, piece_color, piece_rectangle)
+
+    def positions(self):
+        return self.pieces
+
+    def exists_above_top(self, top):
+        for piece in self.pieces:
+            if piece[1][1] < top:
+                return True
+        return False
+
+    def add(self, new_piece):
+        for chunk in new_piece[1]:
+            self.pieces.append((new_piece[0], chunk))
+
+    def check_for_full_row(self, row_y_value, full_row_size, vertical_drop):
+        pieces_in_row = 0
+        for piece in self.pieces:
+            if piece[1][1] == row_y_value:
+                pieces_in_row = pieces_in_row + 1
+
+        if pieces_in_row == full_row_size:
+            for piece_index in range(len(self.pieces)-1, -1, -1):
+                piece_y_index = self.pieces[piece_index][1][1]
+
+                if piece_y_index == row_y_value:
+                    self.pieces.remove(self.pieces[piece_index])
+                elif piece_y_index < row_y_value:
+                    self.pieces[piece_index][1][1] = piece_y_index + vertical_drop
+
+            return 1
+        else:
+            return 0
