@@ -17,7 +17,7 @@ class Game:
 
         # Initializes Game to be displayed
         self.do_ai = True
-        self.draw_possibilities = True
+        self.draw_possibilities = False
         self.calculate_possibilities_scores = True
         self.calculate_best_move = True
         self.make_best_move = True
@@ -59,7 +59,7 @@ class Game:
 
         # Set Up Game
         self.active_piece = self.new_piece()
-        self.mass = Mass.Mass(self.screen)
+        self.mass = Mass.Mass(self.screen, self.grid_thickness)
 
         if self.do_ai:
             if not self.draw_possibilities:

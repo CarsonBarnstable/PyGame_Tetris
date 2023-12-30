@@ -4,7 +4,7 @@ import pygame
 class Mass:
     # Single instance of a Tile
 
-    def __init__(self, screen):
+    def __init__(self, screen, grid_thickness):
         # Initializes a single Tile
 
         # Initialize Basic Visual Variables
@@ -13,16 +13,15 @@ class Mass:
         # Setting up Piece
         self.pieces = []
 
-        # Others
-        self.border_thickness = 1
+        # and the Border
+        self.border_thickness = grid_thickness
 
     def draw(self):
         # Draws the Tile at its position, and a border around it (for grid spacing)
 
         # Draw Tile (then border) to screen
         for piece in self.pieces:
-            piece_color = piece[0]
-            piece_rectangle = piece[1]
+            piece_color, piece_rectangle = piece
             pygame.draw.rect(self.screen, piece_color, piece_rectangle)
 
     def positions(self):
@@ -32,16 +31,10 @@ class Mass:
         return any(piece[1][1] < top for piece in self.pieces)
 
     def add(self, new_piece):
-        for chunk in new_piece[1]:
-            self.pieces.append((new_piece[0], chunk))
+        self.pieces += [(new_piece[0], chunk) for chunk in new_piece[1]]
 
     def check_for_full_row(self, row_y_value, full_row_size, vertical_drop):
-        pieces_in_row = 0
-        for piece in self.pieces:
-            if piece[1][1] == row_y_value:
-                pieces_in_row = pieces_in_row + 1
-
-        if pieces_in_row == full_row_size:
+        if sum(piece[1][1] == row_y_value for piece in self.pieces) == full_row_size:
             for piece_index in range(len(self.pieces)-1, -1, -1):
                 piece_y_index = self.pieces[piece_index][1][1]
 
