@@ -45,7 +45,7 @@ class Piece:
         for rect in self.rects:
             rect.move_ip(horizontal_shift, 0)
 
-        if self.touches_sides(mass):
+        while self.touches_sides(mass):
             self.shift(-1*horizontal_shift, mass)
 
     def rotate(self, matrix):
@@ -118,20 +118,16 @@ class Piece:
         return does_touch
 
     def touches_sides(self, mass):
-        does_touch = False
         left_edge = self.top_left_corner[0]
         right_edge = self.top_left_corner[0] + self.tile_size[0]*self.grid_size[0]
 
         for self_rect in self.rects:
-
             if self_rect.left < left_edge or self_rect.right > right_edge:
-                does_touch = True
+                return True
+            if any(self_rect.colliderect(mass_rect[1]) for mass_rect in mass):
+                return True
 
-            for mass_rect in mass:
-                if self_rect.colliderect(mass_rect[1]):
-                    does_touch = True
-
-        return does_touch
+        return False
 
     def rotation_was_illegal(self, matrix, mass):
         was_illegal = False

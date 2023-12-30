@@ -35,7 +35,7 @@ def main():
     base_coefficients = very_solid
     game_instances = {}
     varied_outcomes = {}
-    variation_num = 1  # number of variations to run
+    variation_num = 8  # number of variations to run
     repetition_per_variation = 1  # repeats of each individual variation
 
     for variation in range(variation_num):
