@@ -191,8 +191,6 @@ class Game:
         self.mass.add(self.active_piece.get_info())
         self.active_piece = self.new_piece()
 
-        self.update()
-
         if self.do_ai:
             self.intelligence_test()
 
