@@ -1,4 +1,4 @@
-import cProfile
+# import cProfile
 import pygame
 import random
 import Game
@@ -24,9 +24,8 @@ def main():
     # decent_coefficients = {"full_rows": 3, "bumpiness": -1, "dist_to_top": 3, "overhangs": -15, "percent_filled": 18}
     # weak_coefficients = {"full_rows": .4,  "bumpiness": 0, "dist_to_top": 2, "overhangs": -20, "percent_filled": 0}
     # bad_coefficients = {"full_rows": .2,  "bumpiness": -.2, "dist_to_top": 6, "overhangs": -2, "percent_filled": 3}
-    very_solid = {'full_rows': 4.0097496350377515, 'bumpiness': -0.9153213934444262, 'dist_to_top':
-        2.529587164513865, 'overhangs': -19.9046787649053, 'percent_filled': 21.79378411874574}
-    # COEFFICIENTS: {'full_rows': 3.9477970286673854, 'bumpiness': -0.9071288880833255, 'dist_to_top': 2.4868517556555165, 'overhangs': -19.865389610599795, 'percent_filled': 22.06986273126868}
+    very_solid = {'full_rows': 4.0097496350377515, 'bumpiness': -0.9153213934444262, 'dist_to_top': 2.529587164513865,
+                  'overhangs': -19.9046787649053, 'percent_filled': 21.79378411874574}
 
     print("BEGIN TEST")
     print()
