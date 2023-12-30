@@ -29,10 +29,7 @@ class Mass:
         return self.pieces
 
     def exists_above_top(self, top):
-        for piece in self.pieces:
-            if piece[1][1] < top:
-                return True
-        return False
+        return any(piece[1][1] < top for piece in self.pieces)
 
     def add(self, new_piece):
         for chunk in new_piece[1]:
