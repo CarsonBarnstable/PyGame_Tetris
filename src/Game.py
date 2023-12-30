@@ -22,8 +22,8 @@ class Game:
         self.calculate_best_move = True
         self.make_best_move = True
 
-        self.possibility_drawing_time_interval = 0.03
-        self.computer_fall_speed = 100.0
+        self.possibility_drawing_time_interval = 0.09
+        self.computer_fall_speed = 10000
         self.coefficients = in_coefficients
 
         # Initialize Game Screen and Background Color
@@ -34,9 +34,9 @@ class Game:
 
         # Initialize Game Clock
         self.game_clock = pygame.time.Clock()
-        self.frames_per_second = 12000
-        self.falling_speed = 1.5
-        self.fall_speed_multiplier = 10
+        self.frames_per_second = 1200
+        self.falling_speed = .1
+        self.fall_speed_multiplier = 5
 
         # Initialize Game-Over conditions
         self.continue_game = True
@@ -60,6 +60,7 @@ class Game:
         self.mass = Mass.Mass(self.screen)
 
         if self.do_ai:
+            self.falling_speed = self.computer_fall_speed
             self.intelligence_test()
 
     def play(self):
