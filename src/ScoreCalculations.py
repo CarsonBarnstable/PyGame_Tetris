@@ -10,7 +10,7 @@ def get_score(mass_rect_list, grid_size, tile_size, coefficients, move=None):
 
     resulting_score = calc_score(full_rows, bumpiness, dist_to_top, overhangs, percent, coefficients)
     if move:
-        return move, resulting_score
+        return resulting_score, move
     # else
     return resulting_score
 
