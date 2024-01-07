@@ -1,87 +1,54 @@
 # import cProfile
 import pygame
-import random
 import Game
 
 
 # DISCLAIMER: INSPIRED BY https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/
 
+def main(screen_size, use_coefficients):
+    # setup
+    screen, screen_canvas = setup_pygame_window(screen_size)
+    game_instance = setup_game_instance(screen, screen_canvas, use_coefficients, close_afterward=False)
 
-def main():
+    # running
+    try:
+        # run game...
+        game_score = game_instance.play()
+    except Exception as e:
+        # ... unless an un-handled error occurs
+        print("Error:  ", str(e.args))
+        game_score = 0
+
+    # useful return
+    return game_score
+
+
+def setup_pygame_window(window_size):
     # Initialize pygame (for rendering text)
     pygame.init()
 
     # Create the Window of size (250x500)
-    size = (250, 500)
+    size = window_size
     screen = pygame.display.set_mode(size)
 
     # Set Title of Window to 'Tetris'
     pygame.display.set_caption("Tetris")
+    screen_rect = (0, 0) + window_size
+    return screen, screen_rect
 
-    # Main Game initialization and Iteration
 
-    screen_rect = (0, 0) + size
-    # decent_coefficients = {"full_rows": 3, "bumpiness": -1, "dist_to_top": 3, "overhangs": -15, "percent_filled": 18}
-    # weak_coefficients = {"full_rows": .4,  "bumpiness": 0, "dist_to_top": 2, "overhangs": -20, "percent_filled": 0}
-    # bad_coefficients = {"full_rows": .2,  "bumpiness": -.2, "dist_to_top": 6, "overhangs": -2, "percent_filled": 3}
-    very_solid = {'full_rows': 4.0097496350377515, 'bumpiness': -0.9153213934444262, 'dist_to_top': 2.529587164513865,
-                  'overhangs': -19.9046787649053, 'percent_filled': 21.79378411874574}
-
-    print("BEGIN TEST")
-    print()
-    print()
-
-    base_coefficients = very_solid
-    game_instances = {}
-    varied_outcomes = {}
-    variation_num = 8  # number of variations to run
-    repetition_per_variation = 1  # repeats of each individual variation
-
-    for variation in range(variation_num):
-        print("RUN " + str(variation + 1))
-
-        # randomizing coefficients for different variations
-        new_coefficients = {}
-        for key in base_coefficients.keys():
-            old_coefficient = base_coefficients.get(key, 0)
-            new_coefficients[key] = old_coefficient + (random.random() - .5) * old_coefficient * 0.05
-
-        # printing and storing variation
-        print("COEFFICIENTS: " + str(new_coefficients))
-        varied_outcomes[variation] = {"coefficients": new_coefficients, "scores": [], "average": None}
-
-        for outcome in range(repetition_per_variation):
-            final = True if (variation_num - 1) == variation and (outcome - 1) == repetition_per_variation else False
-            instance_index = variation * variation_num + outcome
-
-            # creating game instance
-            game_instances[instance_index] = Game.Game(screen, screen_rect, new_coefficients, final)
-
-            try:
-                # run game...
-                game_score = game_instances.get(instance_index).play()
-            except Exception as e:
-                # ... unless an un-handled error occurs
-                print("Error:  ", str(e.args))
-                game_score = 0
-
-            # saving variations' scores
-            varied_outcomes.get(variation).get("scores").append(game_score)
-            print("FINAL SCORE: " + str(game_score))
-
-        # and each given variations' average score
-        average = sum(varied_outcomes.get(variation).get("scores")) / repetition_per_variation
-        varied_outcomes[variation]["average"] = average
-        print("AVERAGE: " + str(average))
-        print()
-
-    print("END TEST")
-
-    print()
-    print(varied_outcomes)
+def setup_game_instance(screen, canvas, coefficients, close_afterward=True):
+    return Game.Game(screen, canvas, coefficients, should_close=close_afterward)
 
 
 if __name__ == "__main__":
-    # cProfile.run('main()', sort='cumulative')
-    main()
+    # test values
+    test_screen_size = (250, 500)
+    test_values = {'full_rows': 4.0097496350377515, 'bumpiness': -0.9153213934444262, 'dist_to_top': 2.529587164513865,
+                   'overhangs': -19.9046787649053, 'percent_filled': 21.79378411874574}
+
+    # run program
+    # cProfile.run('score = main(screen_size, test_values)', sort='cumulative')
+    score = main(test_screen_size, test_values)
+    print("Test run Score:", score)
     # Main Program
