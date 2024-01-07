@@ -31,14 +31,16 @@ class AuxiliaryIntelligence:
             for x_coord in range(self.grid_size[0]):
                 # assembling newly chosen piece
                 pieces = [piece.move(x_coord * self.tile_size[0], 0) for piece in self.initial_piece_rects]
-                self.drop_piece(pieces)
 
+                if self.touches_sides(pieces):
+                    continue
+
+                self.drop_piece(pieces)
                 for piece in pieces:
                     piece.move_ip(0, -1*self.tile_size[1])
 
                 # taking notes of valid new configurations
-                if not self.touches_sides(pieces):
-                    self.valid_masses[rotation_iteration, x_coord] = self.initial_mass + pieces
+                self.valid_masses[rotation_iteration, x_coord] = self.initial_mass + pieces
 
         return self.valid_masses
 

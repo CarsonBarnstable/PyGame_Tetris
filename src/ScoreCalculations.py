@@ -1,16 +1,18 @@
 import pygame
 
 
-def get_score(mass_rect_list, grid_size, tile_size, coefficients):
+def get_score(mass_rect_list, grid_size, tile_size, coefficients, move=None):
     full_rows = num_of_full_rows(mass_rect_list, grid_size, tile_size)
     bumpiness = bumpiness_index(mass_rect_list, grid_size, tile_size)
     dist_to_top = distance_to_top(mass_rect_list, grid_size, tile_size)
     overhangs = number_of_overhangs(mass_rect_list, grid_size, tile_size)
     percent = percent_of_mass_filled(mass_rect_list, grid_size, tile_size)
 
-    score = calc_score(full_rows, bumpiness, dist_to_top, overhangs, percent, coefficients)
-
-    return score
+    resulting_score = calc_score(full_rows, bumpiness, dist_to_top, overhangs, percent, coefficients)
+    if move:
+        return move, resulting_score
+    # else
+    return resulting_score
 
 
 def num_of_full_rows(mass, grid_size, tile_size):

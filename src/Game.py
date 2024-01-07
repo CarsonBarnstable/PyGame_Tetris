@@ -6,12 +6,14 @@ from ScoreCalculations import get_score
 
 import sys
 import time
+import multiprocessing
 
 
 class Game:
     # Single instance of a Game
 
-    def __init__(self, game_screen, rect, in_coefficients, should_close):
+    def __init__(self, game_screen, rect, in_coefficients, should_close=True, threads=None):
+
         # Initialize Continuation Condition
         self.close_after_game = should_close
 
@@ -25,6 +27,7 @@ class Game:
         self.possibility_drawing_time_interval = 0.09
         self.computer_fall_speed = 10000
         self.coefficients = in_coefficients
+        self.use_threads = threads if threads else multiprocessing.cpu_count()//2
 
         # Initialize Game Screen and Background Color
         self.screen = game_screen
@@ -250,7 +253,7 @@ class Game:
         possibilities = current_info.get_all_possibilities()
         return possibilities
 
-    # gets score for each  possible outcome
+    # gets score for each possible outcome
     def get_scores_for(self, possibilities, coefficients):
         scores = {}
         for key, mass in possibilities.items():
