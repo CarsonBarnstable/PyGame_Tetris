@@ -1,4 +1,3 @@
-# import cProfile
 import pygame
 import Game
 
@@ -48,7 +47,6 @@ if __name__ == "__main__":
                    'overhangs': -19.9046787649053, 'percent_filled': 21.79378411874574}
 
     # run program
-    # cProfile.run('score = main(screen_size, test_values)', sort='cumulative')
     score = main(test_screen_size, test_values)
     print("Test run Score:", score)
     # Main Program

@@ -11,7 +11,8 @@ import time
 class Game:
     # Single instance of a Game
 
-    def __init__(self, game_screen, rect, in_coefficients, should_close):
+    def __init__(self, game_screen, rect, in_coefficients, should_close=True):
+
         # Initialize Continuation Condition
         self.close_after_game = should_close
 
@@ -64,13 +65,13 @@ class Game:
         if self.do_ai:
             if not self.draw_possibilities:
                 self.falling_speed = self.computer_fall_speed
-            self.intelligence_test()
 
     def play(self):
         # Play the game until the player presses the close box
-
-        # while not self.close_button_clicked:
         while self.continue_game and not self.close_button_clicked:
+            if self.do_ai:
+                # just do its own thing to place the blocks
+                self.intelligence_test()
 
             self.handle_events()
             self.draw()
@@ -191,9 +192,6 @@ class Game:
         self.mass.add(self.active_piece.get_info())
         self.active_piece = self.new_piece()
 
-        if self.do_ai:
-            self.intelligence_test()
-
     # moves falling piece either left or right (if allowed)
     def move_active_piece_horizontally(self, direction):
         # Moves piece Left/Right along Grid
@@ -250,7 +248,7 @@ class Game:
         possibilities = current_info.get_all_possibilities()
         return possibilities
 
-    # gets score for each  possible outcome
+    # gets score for each possible outcome
     def get_scores_for(self, possibilities, coefficients):
         scores = {}
         for key, mass in possibilities.items():
