@@ -31,7 +31,7 @@ def setup_pygame_window(window_size):
     screen = pygame.display.set_mode(size)
 
     # Set Title of Window to 'Tetris'
-    pygame.display.set_caption("Tetris")
+    pygame.display.set_caption("PyGame Tetris")
     screen_rect = (0, 0) + window_size
     return screen, screen_rect
 

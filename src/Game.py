@@ -52,8 +52,8 @@ class Game:
 
         # Initialize Score Variables
         self.score = 0
-        self.update_score(0)
-        self.score_font_size = 72
+        self.increment_score_by_rows(0)
+        self.score_font_size = self.screen_size[1]//10
         self.dp_antialias = True
         self.score_color = pygame.Color("white")
         self.score_bg_color = (0, 0, 0, 0)
@@ -151,7 +151,7 @@ class Game:
         # Checks to see if game should continue
         self.continue_game = not self.mass.exists_above_top(self.top_left_corner[1])
         if not self.continue_game:
-            self.update_score(0)
+            self.increment_score_by_rows(0)
 
     def update(self):
         # Updates Game State
@@ -224,10 +224,10 @@ class Game:
             height = self.tile_size[1]
             number_of_full_rows = number_of_full_rows + self.mass.check_for_full_row(y_val, self.grid_size[0], height)
         if number_of_full_rows > 0:
-            self.update_score(number_of_full_rows)
+            self.increment_score_by_rows(number_of_full_rows)
 
     # increments score according to score schema
-    def update_score(self, new_row_clears):
+    def increment_score_by_rows(self, new_row_clears):
         self.score = self.score + self.score_points[new_row_clears]
 
     # toggles the pause
