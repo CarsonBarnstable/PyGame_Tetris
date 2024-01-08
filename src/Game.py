@@ -11,7 +11,7 @@ import time
 class Game:
     # Single instance of a Game
 
-    def __init__(self, game_screen, rect, in_coefficients, should_close=True):
+    def __init__(self, game_screen, screen_rect, in_coefficients, should_close=True):
 
         # Initialize Continuation Condition
         self.close_after_game = should_close
@@ -19,9 +19,9 @@ class Game:
         # Initializes Game to be displayed
         self.do_ai = True
         self.draw_possibilities = False
-        self.calculate_possibilities_scores = True
-        self.calculate_best_move = True
-        self.make_best_move = True
+        self.calculate_possibilities_scores = self.do_ai
+        self.calculate_best_move = self.do_ai
+        self.make_best_move = self.do_ai
 
         self.possibility_drawing_time_interval = 0.09
         self.computer_fall_speed = 10000
@@ -44,16 +44,16 @@ class Game:
         self.close_button_clicked = False
 
         # Initialize Game Attributes
-        self.top_left_corner = rect[:2]
-        self.screen_size = rect[2:]
+        self.top_left_corner = screen_rect[:2]
+        self.screen_size = screen_rect[2:]
         self.grid_size = (10, 20)
         self.score_points = {0: 0, 1: 40, 2: 100, 3: 300, 4: 1200}
-        self.tile_size = [self.screen_size[d]/self.grid_size[d] for d in range(len(self.grid_size))]
+        self.tile_size = [self.screen_size[d]//self.grid_size[d] for d in range(len(self.grid_size))]
 
         # Initialize Score Variables
         self.score = 0
-        self.update_score(0)
-        self.score_font_size = 72
+        self.increment_score_by_rows(0)
+        self.score_font_size = self.screen_size[1]//10
         self.dp_antialias = True
         self.score_color = pygame.Color("white")
         self.score_bg_color = (0, 0, 0, 0)
@@ -72,8 +72,9 @@ class Game:
             if self.do_ai:
                 # just do its own thing to place the blocks
                 self.intelligence_test()
+            self.handle_events(self.do_ai)
 
-            self.handle_events()
+            # drawing
             self.draw()
 
             # IF gameplay should continue (end conditions are not met yet)
@@ -93,7 +94,7 @@ class Game:
 
         return self.score
 
-    def handle_events(self):
+    def handle_events(self, ai_active):
         # Event Handling (for all event types)
         # self - type: Game - role: Game's whose events will be handled
 
@@ -106,7 +107,7 @@ class Game:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 self.toggle_pause()
 
-            if self.continue_game:
+            if not ai_active and self.continue_game:
                 # Check for Key Presses
                 if event.type == pygame.KEYDOWN:
                     self.handle_key_press(event.key)
@@ -151,7 +152,7 @@ class Game:
         # Checks to see if game should continue
         self.continue_game = not self.mass.exists_above_top(self.top_left_corner[1])
         if not self.continue_game:
-            self.update_score(0)
+            self.increment_score_by_rows(0)
 
     def update(self):
         # Updates Game State
@@ -201,7 +202,7 @@ class Game:
         if direction == 'R':
             shift_direction = 1
 
-        self.active_piece.shift(shift_direction * self.tile_size[0], self.mass.positions())
+        self.active_piece.shift(shift_direction * self.tile_size[0])
 
     # rotates falling piece either left or right (if allowed)
     def rotate_active_piece(self, rot_direction):
@@ -224,10 +225,10 @@ class Game:
             height = self.tile_size[1]
             number_of_full_rows = number_of_full_rows + self.mass.check_for_full_row(y_val, self.grid_size[0], height)
         if number_of_full_rows > 0:
-            self.update_score(number_of_full_rows)
+            self.increment_score_by_rows(number_of_full_rows)
 
     # increments score according to score schema
-    def update_score(self, new_row_clears):
+    def increment_score_by_rows(self, new_row_clears):
         self.score = self.score + self.score_points[new_row_clears]
 
     # toggles the pause
@@ -257,7 +258,7 @@ class Game:
 
     @staticmethod
     # determines optimal (valid) move
-    def get_optimal_moves(in_scores):
+    def get_optimal_move(in_scores):
         default_move = (0, 1)
 
         top_score = in_scores.get(default_move, 0)
@@ -271,24 +272,22 @@ class Game:
         return best_moves
 
     # makes move according to optimal choice of moves
-    def make_move(self, rotation_num, x_shift):
+    def make_move(self, rotation_num, x_shift, drop=True):
         for __ in range(rotation_num):
             self.active_piece.rotate((1, -1))
 
         overflow_catcher = self.grid_size[0]
-        while self.active_piece.get_centre_x() != x_shift:
+        while self.active_piece.get_centre_x() != x_shift and overflow_catcher:
             direction = 0
             if self.active_piece.get_centre_x() > x_shift:
                 direction = -1
             if self.active_piece.get_centre_x() < x_shift:
                 direction = 1
-            self.active_piece.shift(direction * self.tile_size[0], self.mass.positions())
+            self.active_piece.shift(direction * self.tile_size[0])
 
             overflow_catcher -= 1
-            if overflow_catcher == 0:
-                break
 
-        while not self.active_piece.touches_mass_or_bottom(self.mass.positions()):
+        while drop and not self.active_piece.touches_mass_or_bottom(self.mass.positions()):
             self.draw()
             self.active_piece.fall(self.falling_speed * self.computer_fall_speed)
 
@@ -317,10 +316,10 @@ class Game:
             all_scores = self.get_scores_for(all_possibilities, coefficients)
 
         if self.calculate_best_move and self.calculate_possibilities_scores:
-            best_moves = self.get_optimal_moves(all_scores)
+            best_move = self.get_optimal_move(all_scores)
 
             if self.make_best_move:
-                num_of_rotations, x_shift = best_moves
+                num_of_rotations, x_shift = best_move
                 self.make_move(num_of_rotations, x_shift)
 
 

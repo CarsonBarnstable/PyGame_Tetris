@@ -90,11 +90,11 @@ def percent_of_mass_filled(mass, grid_size, tile_size):
 
 
 def calc_score(full_rows, bumpiness, dist_to_top, overhangs, percent, coefficients):
-    scores = {"full_rows": coefficients.get("full_rows") * full_rows,
-              "bumpiness": coefficients.get("bumpiness") * bumpiness,
-              "dist_to_top": coefficients.get("dist_to_top") * dist_to_top,
-              "overhangs": coefficients.get("overhangs") * overhangs,
-              "percent_filled": coefficients.get("percent_filled") * percent}
+    scores = {"full_rows": coefficients.get("full_rows", 0) * full_rows,
+              "bumpiness": coefficients.get("bumpiness", 0) * bumpiness,
+              "dist_to_top": coefficients.get("dist_to_top", 0) * dist_to_top,
+              "overhangs": coefficients.get("overhangs", 0) * overhangs,
+              "percent_filled": coefficients.get("percent_filled", 0) * percent}
 
     score = 0
     for key in scores.keys():

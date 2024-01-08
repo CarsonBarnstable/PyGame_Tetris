@@ -2,18 +2,18 @@ import pygame
 
 
 class Mass:
-    # Single instance of a Tile
+    # Entire "Sitting Mass"
 
     def __init__(self, screen, grid_thickness):
-        # Initializes a single Tile
+        # Initializes the Entire Mass
 
         # Initialize Basic Visual Variables
         self.screen = screen
 
-        # Setting up Piece
+        # Setting up Mass
         self.pieces = []
 
-        # and the Border
+        # and noting Border Thickness
         self.border_thickness = grid_thickness
 
     def draw(self):
@@ -33,6 +33,7 @@ class Mass:
     def add(self, new_piece):
         self.pieces += [(new_piece[0], chunk) for chunk in new_piece[1]]
 
+    # TODO": re-isolate and fix
     def check_for_full_row(self, row_y_value, full_row_size, vertical_drop):
         if sum(piece[1][1] == row_y_value for piece in self.pieces) == full_row_size:
             for piece_index in range(len(self.pieces)-1, -1, -1):
@@ -44,5 +45,5 @@ class Mass:
                     self.pieces[piece_index][1][1] = piece_y_index + vertical_drop
 
             return 1
-        else:
-            return 0
+        # else
+        return 0
