@@ -19,9 +19,9 @@ class Game:
         # Initializes Game to be displayed
         self.do_ai = True
         self.draw_possibilities = False
-        self.calculate_possibilities_scores = True
-        self.calculate_best_move = True
-        self.make_best_move = True
+        self.calculate_possibilities_scores = self.do_ai
+        self.calculate_best_move = self.do_ai
+        self.make_best_move = self.do_ai
 
         self.possibility_drawing_time_interval = 0.09
         self.computer_fall_speed = 10000
