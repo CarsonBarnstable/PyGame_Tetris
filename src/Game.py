@@ -72,8 +72,9 @@ class Game:
             if self.do_ai:
                 # just do its own thing to place the blocks
                 self.intelligence_test()
+            self.handle_events(self.do_ai)
 
-            self.handle_events()
+            # drawing
             self.draw()
 
             # IF gameplay should continue (end conditions are not met yet)
@@ -93,7 +94,7 @@ class Game:
 
         return self.score
 
-    def handle_events(self):
+    def handle_events(self, ai_active):
         # Event Handling (for all event types)
         # self - type: Game - role: Game's whose events will be handled
 
@@ -106,7 +107,7 @@ class Game:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 self.toggle_pause()
 
-            if self.continue_game:
+            if not ai_active and self.continue_game:
                 # Check for Key Presses
                 if event.type == pygame.KEYDOWN:
                     self.handle_key_press(event.key)
