@@ -11,7 +11,7 @@ import time
 class Game:
     # Single instance of a Game
 
-    def __init__(self, game_screen, rect, in_coefficients, should_close=True):
+    def __init__(self, game_screen, screen_rect, in_coefficients, should_close=True):
 
         # Initialize Continuation Condition
         self.close_after_game = should_close
@@ -44,11 +44,11 @@ class Game:
         self.close_button_clicked = False
 
         # Initialize Game Attributes
-        self.top_left_corner = rect[:2]
-        self.screen_size = rect[2:]
+        self.top_left_corner = screen_rect[:2]
+        self.screen_size = screen_rect[2:]
         self.grid_size = (10, 20)
         self.score_points = {0: 0, 1: 40, 2: 100, 3: 300, 4: 1200}
-        self.tile_size = [self.screen_size[d]/self.grid_size[d] for d in range(len(self.grid_size))]
+        self.tile_size = [self.screen_size[d]//self.grid_size[d] for d in range(len(self.grid_size))]
 
         # Initialize Score Variables
         self.score = 0
