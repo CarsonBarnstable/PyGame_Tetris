@@ -41,12 +41,9 @@ class Piece:
             for rect in self.rects:
                 rect.move_ip(0, self.tile_size[1])
 
-    def shift(self, horizontal_shift, mass):
+    def shift(self, horizontal_shift):
         for rect in self.rects:
             rect.move_ip(horizontal_shift, 0)
-
-        while self.touches_sides(mass):
-            self.shift(-1*horizontal_shift, mass)
 
     def rotate(self, matrix):
         centre_point = self.rects[0].topleft

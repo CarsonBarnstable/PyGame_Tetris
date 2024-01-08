@@ -201,7 +201,7 @@ class Game:
         if direction == 'R':
             shift_direction = 1
 
-        self.active_piece.shift(shift_direction * self.tile_size[0], self.mass.positions())
+        self.active_piece.shift(shift_direction * self.tile_size[0])
 
     # rotates falling piece either left or right (if allowed)
     def rotate_active_piece(self, rot_direction):
@@ -257,7 +257,7 @@ class Game:
 
     @staticmethod
     # determines optimal (valid) move
-    def get_optimal_moves(in_scores):
+    def get_optimal_move(in_scores):
         default_move = (0, 1)
 
         top_score = in_scores.get(default_move, 0)
@@ -271,24 +271,22 @@ class Game:
         return best_moves
 
     # makes move according to optimal choice of moves
-    def make_move(self, rotation_num, x_shift):
+    def make_move(self, rotation_num, x_shift, drop=True):
         for __ in range(rotation_num):
             self.active_piece.rotate((1, -1))
 
         overflow_catcher = self.grid_size[0]
-        while self.active_piece.get_centre_x() != x_shift:
+        while self.active_piece.get_centre_x() != x_shift and overflow_catcher:
             direction = 0
             if self.active_piece.get_centre_x() > x_shift:
                 direction = -1
             if self.active_piece.get_centre_x() < x_shift:
                 direction = 1
-            self.active_piece.shift(direction * self.tile_size[0], self.mass.positions())
+            self.active_piece.shift(direction * self.tile_size[0])
 
             overflow_catcher -= 1
-            if overflow_catcher == 0:
-                break
 
-        while not self.active_piece.touches_mass_or_bottom(self.mass.positions()):
+        while drop and not self.active_piece.touches_mass_or_bottom(self.mass.positions()):
             self.draw()
             self.active_piece.fall(self.falling_speed * self.computer_fall_speed)
 
@@ -317,10 +315,10 @@ class Game:
             all_scores = self.get_scores_for(all_possibilities, coefficients)
 
         if self.calculate_best_move and self.calculate_possibilities_scores:
-            best_moves = self.get_optimal_moves(all_scores)
+            best_move = self.get_optimal_move(all_scores)
 
             if self.make_best_move:
-                num_of_rotations, x_shift = best_moves
+                num_of_rotations, x_shift = best_move
                 self.make_move(num_of_rotations, x_shift)
 
 
