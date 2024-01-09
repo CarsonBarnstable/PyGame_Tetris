@@ -1,5 +1,5 @@
 import pygame
-import Game
+from Game import Game
 
 
 # DISCLAIMER: INSPIRED BY https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/
@@ -17,7 +17,6 @@ def main(screen_size, use_coefficients):
         # ... unless an un-handled error occurs
         print("Error:  ", str(e.args))
         game_score = 0
-        raise e
 
     # useful return
     return game_score
@@ -38,7 +37,7 @@ def setup_pygame_window(window_size):
 
 
 def setup_game_instance(screen, canvas, coefficients, close_afterward=True):
-    return Game.Game(screen, canvas, coefficients, should_close=close_afterward)
+    return Game(screen, canvas, coefficients, should_close=close_afterward)
 
 
 if __name__ == "__main__":
