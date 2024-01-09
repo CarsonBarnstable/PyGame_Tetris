@@ -60,18 +60,20 @@ if __name__ == "__main__":
                    'percent_filled': 0.5108550010106069
                    }
     test_var = 0.5
-    repetitions = 20
-    threads = 4
+    repetitions = 100
+    threads = 6
 
     # Main Program (Test Iteration)
     start_time = time.time()
     scores, used_coefficients = execute_run(test_values, variance=test_var, repeats=repetitions, use_threads=threads)
     test_output = sorted([(score, u_co) for score, u_co in zip(scores, used_coefficients)], key=lambda x: x[0])
     end_time = time.time()
+    total_time = end_time-start_time
 
     # and Printing Useful Output Details
     print("Data Output:", test_output)
     print("Scores:", sorted(scores))
-    print("Total Test Time: ", end_time-start_time, "seconds")
+    print("Total Test Time: ", total_time, "seconds")
+    print("Average of", total_time/repetitions, "seconds per game (", threads, "threads | ", repetitions, "games )")
     print()
     print_params_per_score(scores, used_coefficients)
