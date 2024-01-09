@@ -151,8 +151,6 @@ class Game:
     def decide_continue(self):
         # Checks to see if game should continue
         self.continue_game = not self.mass.exists_above_top(self.top_left_corner[1])
-        if not self.continue_game:
-            self.increment_score_by_rows(0)
 
     def update(self):
         # Updates Game State
