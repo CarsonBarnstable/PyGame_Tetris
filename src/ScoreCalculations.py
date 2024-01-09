@@ -1,4 +1,5 @@
 import pygame
+from random import uniform
 
 
 def get_score(mass_rect_list, grid_size, tile_size, coefficients, move=None):
@@ -102,3 +103,17 @@ def calc_score(full_rows, bumpiness, dist_to_top, overhangs, percent, coefficien
         score = score + piece_score
 
     return score
+
+
+def normalize(parameters):
+    summed_params = sum((abs(val) for val in parameters.values()))
+    normed_params = {param: parameters[param]/summed_params for param in parameters.keys()}
+    return normed_params
+
+
+def variate(parameters, variance=0.0):
+    if variance == 0.0:
+        return parameters
+    # else
+    varied_params = {param: val*uniform(1-variance, 1+variance) for param, val in parameters.items()}
+    return varied_params
