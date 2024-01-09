@@ -73,6 +73,5 @@ def main(var_num=1, rep_per_var=1):
 
 
 if __name__ == "__main__":
-    # cProfile.run('main()', sort='cumulative')
     main(var_num=2, rep_per_var=3)
     # Main Program
