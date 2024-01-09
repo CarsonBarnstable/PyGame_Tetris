@@ -219,13 +219,11 @@ class Game:
 
     # deals with any full rows (updates score and shifts mass)
     def handle_full_rows(self):
-        number_of_full_rows = 0
-        for row_num in range(self.grid_size[1]):
-            y_val = row_num*self.tile_size[1]
-            height = self.tile_size[1]
-            number_of_full_rows = number_of_full_rows + self.mass.check_for_full_row(y_val, self.grid_size[0], height)
+        number_of_full_rows = self.mass.deal_with_full_rows(self.grid_size, self.tile_size)
         if number_of_full_rows > 0:
             self.increment_score_by_rows(number_of_full_rows)
+        if number_of_full_rows == -1:  # vertical overflow
+            return
 
     # increments score according to score schema
     def increment_score_by_rows(self, new_row_clears):
