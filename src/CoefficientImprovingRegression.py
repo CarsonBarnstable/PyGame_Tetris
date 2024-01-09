@@ -29,8 +29,12 @@ def process_game(use_coefficients, window_size):
 
 
 if __name__ == "__main__":
-    test_values = {'full_rows': 4.0097496350377515, 'bumpiness': -0.9153213934444262, 'dist_to_top': 2.529587164513865,
-                   'overhangs': -19.9046787649053, 'percent_filled': 21.79378411874574}
+    test_values = {'full_rows': 0.0659733288908669,
+                   'bumpiness': -0.018742896904640226,
+                   'dist_to_top': 0.06519767646347654,
+                   'overhangs': -0.33923109673040946,
+                   'percent_filled': 0.5108550010106069
+                   }
     test_var = 0.5
     repetitions = 20
     threads = 4

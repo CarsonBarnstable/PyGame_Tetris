@@ -29,7 +29,6 @@ class Piece:
 
     def draw(self):
         # Draws the Piece at its position
-
         for rectangle in self.rects:
             pygame.draw.rect(self.screen, self.tile_color, rectangle)
 
