@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # Main Program (Test Iteration)
     start_time = time.time()
     scores, used_coefficients = execute_run(test_values, variance=test_var, repeats=repetitions, use_threads=threads)
-    test_output = sorted([(score, u_co) for score, u_co in zip(scores, used_coefficients)], key=lambda x: x[0])
+    test_output = sorted([(score, u_co) for score, u_co in zip(scores, used_coefficients)], key=lambda x: -x[0])
     end_time = time.time()
 
     # and Printing Useful Output Details
