@@ -28,6 +28,30 @@ def process_game(use_coefficients, window_size):
     return score
 
 
+def print_params_per_score(result_scores, used_params, score_width=7, col_width=15, spacer=2, sort=True):
+    all_params = ['full_rows', 'bumpiness', 'dist_to_top', 'overhangs', 'percent_filled']
+
+    # sorting if necessary
+    if sort:
+        sorting_array = [(sc, par) for sc, par in zip(result_scores, used_params)]
+        sorting_array.sort(key=lambda x: x[0])  # sort by score
+        result_scores, used_params = list(zip(*sorting_array))
+
+    # Printing Header Row
+    print(" "*score_width, end=" "*spacer)
+    for param in all_params:
+        print(param[:col_width].center(col_width), end=" "*spacer)
+    print()
+
+    # printing all proceeding rows
+    for score, score_params in zip(result_scores, used_params):
+        print(str(score).rjust(score_width), end="")  # score
+        print(" "*2, end="")  # break
+        for param in score_params.values():
+            print(str(param)[:col_width].ljust(col_width), end=" "*spacer)
+        print()  # newline char
+
+
 if __name__ == "__main__":
     test_values = {'full_rows': 0.0659733288908669,
                    'bumpiness': -0.018742896904640226,
@@ -49,3 +73,5 @@ if __name__ == "__main__":
     print("Data Output:", test_output)
     print("Scores:", sorted(scores))
     print("Total Test Time: ", end_time-start_time, "seconds")
+    print()
+    print_params_per_score(scores, used_coefficients)
