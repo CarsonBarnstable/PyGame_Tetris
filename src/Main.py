@@ -17,6 +17,7 @@ def main(screen_size, use_coefficients):
         # ... unless an un-handled error occurs
         print("Error:  ", str(e.args))
         game_score = 0
+        raise e
 
     # useful return
     return game_score

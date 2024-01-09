@@ -33,17 +33,36 @@ class Mass:
     def add(self, new_piece):
         self.pieces += [(new_piece[0], chunk) for chunk in new_piece[1]]
 
-    # TODO": re-isolate and fix
-    def check_for_full_row(self, row_y_value, full_row_size, vertical_drop):
-        if sum(piece[1][1] == row_y_value for piece in self.pieces) == full_row_size:
-            for piece_index in range(len(self.pieces)-1, -1, -1):
-                piece_y_index = self.pieces[piece_index][1][1]
+    def deal_with_full_rows(self, full_grid_size, tile_size):
+        # Setup
+        height = tile_size[1]
+        row_counter_accumulator = {row_i*height: {'count': 0, 'pieces': []} for row_i in range(full_grid_size[1])}
 
-                if piece_y_index == row_y_value:
-                    self.pieces.remove(self.pieces[piece_index])
-                elif piece_y_index < row_y_value:
-                    self.pieces[piece_index][1][1] = piece_y_index + vertical_drop
+        # Indexing and Taking Note of All Pieces
+        for piece in self.pieces:
+            y_val = piece[1][1]
+            if y_val < 0:  # vertical overflow
+                return -1
+            row_counter_accumulator[y_val]['count'] += 1
+            row_counter_accumulator[y_val]['pieces'].append(piece)
 
-            return 1
-        # else
-        return 0
+        # Determining all Full Rows
+        full_rows = []
+        for y_height, row_details in row_counter_accumulator.items():
+            if row_details['count'] == full_grid_size[0]:
+                full_rows.append(y_height)
+
+        # Dealing with Full Rows (from Bottom Up)
+        for full_row_y_height in sorted(full_rows, reverse=True):
+            # Deleting Elements from Full Row
+            for piece in row_counter_accumulator[full_row_y_height]['pieces']:
+                self.pieces.remove(piece)
+            # and Shifting *Above* Elements Down
+            for row_i in range(full_grid_size[1]-1):
+                if row_i*tile_size[1] >= full_row_y_height:
+                    break  # onto next full row
+                for piece in row_counter_accumulator[row_i*height]['pieces']:
+                    piece[1][1] += tile_size[1]
+
+        # Returning the Number of Full Rows
+        return len(full_rows)
