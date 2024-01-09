@@ -17,9 +17,7 @@ class Mass:
         self.border_thickness = grid_thickness
 
     def draw(self):
-        # Draws the Tile at its position, and a border around it (for grid spacing)
-
-        # Draw Tile (then border) to screen
+        # Draws the Mass w/ All Proper Colors
         for piece in self.pieces:
             piece_color, piece_rectangle = piece
             pygame.draw.rect(self.screen, piece_color, piece_rectangle)
