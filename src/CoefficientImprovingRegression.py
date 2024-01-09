@@ -4,13 +4,17 @@ import multiprocessing
 
 
 def main(coefficients_start=None, variation_percent_start=100, test_repeats=1, iterations=-1, window_size=(250, 500)):
-    score = process_game(coefficients_start, variation_percent_start, test_repeats, iterations, window_size)
-    print(score)
+    # score = process_game(coefficients_start, variation_percent_start, test_repeats, iterations, window_size)
+    
+    inputs = [(coefficients_start, variation_percent_start, test_repeats, iterations, window_size) for _ in range(20)]
+    with multiprocessing.Pool(4) as p:
+        pooled_scores = p.starmap(process_game, inputs)
+    print(pooled_scores)
 
 
 def process_game(coefficients_start, variation_percent_start, test_repeats, iterations, window_size):
     screen, screen_canvas = setup_pygame_window(window_size)
-    game_instance = setup_game_instance(screen, screen_canvas, start_values, close_afterward=False)
+    game_instance = setup_game_instance(screen, screen_canvas, coefficients_start, close_afterward=False)
     score = game_instance.play()
     return score
 
