@@ -52,7 +52,8 @@ def print_params_per_score(result_scores, used_params, score_width=7, col_width=
         print()  # newline char
 
 
-if __name__ == "__main__":
+def execute_test(print_output_timings=False):
+    # Just fair values to show full performance of multithreaded program
     test_values = {'full_rows': 0.0659733288908669,
                    'bumpiness': -0.018742896904640226,
                    'dist_to_top': 0.06519767646347654,
@@ -60,8 +61,8 @@ if __name__ == "__main__":
                    'percent_filled': 0.5108550010106069
                    }
     test_var = 0.5
-    repetitions = 100
-    threads = 6
+    repetitions = 20
+    threads = 4
 
     # Main Program (Test Iteration)
     start_time = time.time()
@@ -71,9 +72,14 @@ if __name__ == "__main__":
     total_time = end_time-start_time
 
     # and Printing Useful Output Details
-    print("Data Output:", test_output)
-    print("Scores:", sorted(scores))
-    print("Total Test Time: ", total_time, "seconds")
-    print("Average of", total_time/repetitions, "seconds per game (", threads, "threads | ", repetitions, "games )")
-    print()
-    print_params_per_score(scores, used_coefficients)
+    if print_output_timings:
+        print("Data Output:", test_output)
+        print("Scores:", sorted(scores))
+        print("Total Test Time: ", total_time, "seconds")
+        print("Average of", total_time/repetitions, "seconds per game (", threads, "threads | ", repetitions, "games )")
+        print()
+        print_params_per_score(scores, used_coefficients)
+
+
+if __name__ == "__main__":
+    execute_test(print_output_timings=True)
