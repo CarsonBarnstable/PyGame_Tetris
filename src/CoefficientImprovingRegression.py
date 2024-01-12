@@ -4,6 +4,31 @@ from ScoreCalculations import normalize, variate
 import multiprocessing
 import time
 
+# Which programs to Run
+RUN_TEST_OUT = False
+GENETIC_ALGO = True
+
+# Controlling Genetic Algorithm
+GENETIC_GENERATIONS = 6
+GENETIC_ITERATIONS = 20  # per generation
+CONCURRENT_GAMES = 4  # within generation
+SURVIVAL_PROP = 0.3  # after each generation
+
+# Controlling Genetic Iterations
+GENERATION_VARIANCES = [0.5, 0.4, 0.3, 0.2, 0.1, 0.05]
+STARTING_PARAMS = {'full_rows': 0.0659733288908669,
+                   'bumpiness': -0.018742896904640226,
+                   'dist_to_top': 0.06519767646347654,
+                   'overhangs': -0.33923109673040946,
+                   'percent_filled': 0.5108550010106069
+                   }
+
+# Quick Parameter Checking
+assert CONCURRENT_GAMES <= multiprocessing.cpu_count()  # terrible performance otherwise
+assert len(GENERATION_VARIANCES) >= GENETIC_GENERATIONS  # ensuring there are adequate variances
+assert all(VAR >= 0 for VAR in GENERATION_VARIANCES)  # just for logical randomized varying
+assert 0 < SURVIVAL_PROP < 1
+
 
 def execute_run(coefficients=None, variance=0.0, repeats=1, use_threads=4, window_size=(250, 500)):
     # Base Case?
@@ -52,7 +77,16 @@ def print_params_per_score(result_scores, used_params, score_width=7, col_width=
         print()  # newline char
 
 
-def execute_test(print_output_timings=False):
+def print_run_details(data_out, scores, total_time, threads, repeats, coefficients):
+    print("Data Output:", data_out)
+    print("Scores:", sorted(scores))
+    print("Total Test Time: ", total_time, "seconds")
+    print("Average of", total_time/repeats, "seconds per game (", threads, "threads | ", repeats, "games )")
+    print()
+    print_params_per_score(scores, coefficients)
+
+
+def do_test(print_output_timings=False):
     # Just fair values to show full performance of multithreaded program
     test_values = {'full_rows': 0.0659733288908669,
                    'bumpiness': -0.018742896904640226,
@@ -73,13 +107,41 @@ def execute_test(print_output_timings=False):
 
     # and Printing Useful Output Details
     if print_output_timings:
-        print("Data Output:", test_output)
-        print("Scores:", sorted(scores))
-        print("Total Test Time: ", total_time, "seconds")
-        print("Average of", total_time/repetitions, "seconds per game (", threads, "threads | ", repetitions, "games )")
-        print()
-        print_params_per_score(scores, used_coefficients)
+        print_run_details(test_output, scores, total_time, threads, repetitions, used_coefficients)
+
+
+def do_genetic_algo(print_dialogue=False, print_best_parameters=True):
+    generation_parameters = STARTING_PARAMS
+    for generation in range(GENETIC_GENERATIONS):
+        start_time = time.time()
+
+        # Running Execution with Current Generation's Parameters
+        scores, coefficients = execute_run(generation_parameters, variance=GENERATION_VARIANCES[generation],
+                                           repeats=GENETIC_ITERATIONS, use_threads=CONCURRENT_GAMES)
+
+        # Isolating Top Proportion of Runs
+        score_coefficient = sorted([(score, co) for score, co in zip(scores, coefficients)], key=lambda x: x[0])
+        top_half_score_coefficients = score_coefficient[int(GENETIC_ITERATIONS*(1-SURVIVAL_PROP)):]
+
+        # Averaging Coefficients from Top Proportion
+        for coefficient in STARTING_PARAMS.keys():
+            generation_parameters[coefficient] = sum(attempt[1][coefficient] for attempt in top_half_score_coefficients)
+        generation_parameters = normalize(generation_parameters)
+        tot_time = time.time() - start_time
+
+        # Printing (when Required)
+        if print_dialogue:
+            print()
+            print("* "*5 + "GENERATION " + str(generation+1) + " *"*5)
+            print()
+            print_run_details(score_coefficient, scores, tot_time, CONCURRENT_GAMES, GENETIC_ITERATIONS, coefficients)
+        if print_best_parameters:
+            print("Generation: ", generation+1, ": ", generation_parameters)
+            print()
 
 
 if __name__ == "__main__":
-    execute_test(print_output_timings=True)
+    if RUN_TEST_OUT:
+        do_test(print_output_timings=True)
+    if GENETIC_ALGO:
+        do_genetic_algo(print_dialogue=True)
