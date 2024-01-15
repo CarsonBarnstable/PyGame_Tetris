@@ -9,13 +9,13 @@ RUN_TEST_OUT = False
 GENETIC_ALGO = True
 
 # Controlling Genetic Algorithm
-GENETIC_GENERATIONS = 6
-GENETIC_ITERATIONS = 20  # per generation
+GENETIC_GENERATIONS = 12
+GENETIC_ITERATIONS = 100  # per generation
 CONCURRENT_GAMES = 4  # within generation
 SURVIVAL_PROP = 0.3  # after each generation
 
 # Controlling Genetic Iterations
-GENERATION_VARIANCES = [0.5, 0.4, 0.3, 0.2, 0.1, 0.05]
+GENERATION_VARIANCES = [1.5, 1.25, 1, 1, .5, .5, .25, .25, .1, .1, .1, .1]
 STARTING_PARAMS = {'full_rows': 0.0659733288908669,
                    'bumpiness': -0.018742896904640226,
                    'dist_to_top': 0.06519767646347654,
@@ -88,11 +88,11 @@ def print_run_details(data_out, scores, total_time, threads, repeats, coefficien
 
 def do_test(print_output_timings=False):
     # Just fair values to show full performance of multithreaded program
-    test_values = {'full_rows': 0.0659733288908669,
-                   'bumpiness': -0.018742896904640226,
-                   'dist_to_top': 0.06519767646347654,
-                   'overhangs': -0.33923109673040946,
-                   'percent_filled': 0.5108550010106069
+    test_values = {'full_rows': 0.07636406751573921,
+                   'bumpiness': -0.016428635546815052,
+                   'dist_to_top': 0.06889060214557768,
+                   'overhangs': -0.3080252691272929,
+                   'percent_filled': 0.5302914256645752
                    }
     test_var = 0.5
     repetitions = 20
@@ -112,6 +112,8 @@ def do_test(print_output_timings=False):
 
 def do_genetic_algo(print_dialogue=False, print_best_parameters=True):
     generation_parameters = STARTING_PARAMS
+    print("\nGeneration:  0 : ", generation_parameters, "\n")
+
     for generation in range(GENETIC_GENERATIONS):
         start_time = time.time()
 
