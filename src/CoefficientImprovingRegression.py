@@ -11,7 +11,7 @@ GENETIC_ALGO = True
 # Controlling Genetic Algorithm
 GENETIC_GENERATIONS = 12
 GENETIC_ITERATIONS = 100  # per generation
-CONCURRENT_GAMES = 6  # within generation
+CONCURRENT_GAMES = 4  # within generation
 SURVIVAL_PROP = 0.3  # after each generation
 
 # Controlling Genetic Iterations
