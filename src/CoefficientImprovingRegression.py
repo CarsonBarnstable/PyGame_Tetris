@@ -15,7 +15,7 @@ CONCURRENT_GAMES = 4  # within generation
 SURVIVAL_PROP = 0.3  # after each generation
 
 # Controlling Genetic Iterations
-GENERATION_VARIANCES = [1.5, 1.25, 1, 1, .5, .5, .25, .25, .1, .1, .1, .1]
+GENERATION_VARIANCES = [1, 1, 0.75, 0.75, .5, .5, .25, .25, .1, .1, .1, .1]
 STARTING_PARAMS = {'full_rows': 0.0659733288908669,
                    'bumpiness': -0.018742896904640226,
                    'dist_to_top': 0.06519767646347654,
